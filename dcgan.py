@@ -22,6 +22,15 @@ transform = transforms.Compose([transforms.Scale(imageSize), transforms.ToTensor
 dataset = dset.CIFAR10(root = './data', download = True, transform = transform) # We download the training set in the ./data folder and we apply the previous transformations on each image.
 dataloader = torch.utils.data.DataLoader(dataset, batch_size = batchSize, shuffle = True, num_workers = 2) # We use dataLoader to get the images of the training set batch by batch.
 
+# Defining the weights_init function that takes as input a neural network m and that will initialize all its weights.
+def weights_init(m):
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        m.weight.data.normal_(0.0, 0.02)
+    elif classname.find('BatchNorm') != -1:
+        m.weight.data.normal_(1.0, 0.02)
+        m.bias.data.fill_(0)
+
 #defining the generator
 
 class G(nn.Module):
@@ -45,4 +54,10 @@ class G(nn.Module):
                 nn.BatchNorm2d(3),
                 nn.Tanh(True)
                 )
+    def forward(self, input):
+        output = self.main(input)
+        return output 
+#creating the generator
+netG = G()
+netG.apply(weights_init)
         
