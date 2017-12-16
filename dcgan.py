@@ -21,3 +21,28 @@ transform = transforms.Compose([transforms.Scale(imageSize), transforms.ToTensor
 # Loading the dataset
 dataset = dset.CIFAR10(root = './data', download = True, transform = transform) # We download the training set in the ./data folder and we apply the previous transformations on each image.
 dataloader = torch.utils.data.DataLoader(dataset, batch_size = batchSize, shuffle = True, num_workers = 2) # We use dataLoader to get the images of the training set batch by batch.
+
+#defining the generator
+
+class G(nn.Module):
+    
+    def __init__(self):
+        super(G, self).__int__()
+        self.main = nn.Sequential(
+                nn.ConvTranspose2d(100, 512, 4, 1, 0, bias = False),
+                nn.BatchNorm2d(512),
+                nn.ReLU(True),
+                nn.ConvTranspose2d(512, 256, 4, 2, 0, bias = False),
+                nn.BatchNorm2d(256),
+                nn.ReLU(True),
+                nn.ConvTranspose2d(256, 128, 4, 2, 0, bias = False),
+                nn.BatchNorm2d(128),
+                nn.ReLU(True),
+                nn.ConvTranspose2d(128, 64, 4, 2, 0, bias = False),
+                nn.BatchNorm2d(64),
+                nn.ReLU(True),
+                nn.ConvTranspose2d(64, 3, 4, 2, 0, bias = False),
+                nn.BatchNorm2d(3),
+                nn.Tanh(True)
+                )
+        
